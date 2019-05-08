@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>Multiclipboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app" style="padding: 50px;">
+    <div v-for="x in howMany" style="margin-bottom: 15px;">
+      <input type="text" style="width: 400px;"/>
+      <button @click="sendToClipboard">Copy</button>
+    </div>
+  </div>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      howMany: 10
+    },
+    methods: {
+      sendToClipboard: function(e) {
+        e.target.previousElementSibling.select();
+        document.execCommand('copy');
+      }
+    }
+  })
+</script>
+</body>
+</html>
