@@ -5,22 +5,94 @@
 </head>
 <body>
   <div id="app" style="padding: 50px;">
-    <div v-for="x in howMany" style="margin-bottom: 15px;">
-      <input type="text" style="width: 400px;"/>
-      <button @click="sendToClipboard">Copy</button>
+    <div v-for="(x, index) in howMany" style="margin-bottom: 15px;">
+      {{ (index + 1) }}
+      <input type="text" style="width: 400px;" @change="saveToStorage(index + 1)" v-model="fsContent[index]" :ref="'inputF' + (index + 1)"/>
+      <button @click="sendToClipboard(index + 1)">Copy</button>
+      <span v-if="copied[index]">Copied</span>
     </div>
   </div>
 <script>
   new Vue({
     el: '#app',
     data: {
-      howMany: 10
+      fsContent: [
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        ''
+      ],
+      copied: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      howMany: 12
     },
     methods: {
-      sendToClipboard: function(e) {
-        e.target.previousElementSibling.select();
+      sendToClipboard: function(fNumber) {
+        this.copied = [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ];
+        this.copied[fNumber - 1] = true;
+        this.$refs['inputF' + fNumber][0].select();
         document.execCommand('copy');
+      },
+      saveToStorage: function(fNumber) {
+        window.localStorage.setItem('f' + fNumber, this.fsContent[fNumber - 1]);
       }
+    },
+    mounted: function() {
+      this.$nextTick(function() {
+        for (r = 1; r <= 12; r++) {
+          if (window.localStorage.getItem('f' + r))
+            this.$set(this.fsContent, r - 1, window.localStorage.getItem('f' + r)); // updating array doesn't set reactivity
+        };
+        var that = this;
+        document.addEventListener('keydown', function (event) {
+            var key = event.key || event.keyCode;
+            if (key === 'F1') { event.preventDefault(); that.sendToClipboard(1); }
+            if (key === 'F2') { event.preventDefault(); that.sendToClipboard(2); }
+            if (key === 'F3') { event.preventDefault(); that.sendToClipboard(3); }
+            if (key === 'F4') { event.preventDefault(); that.sendToClipboard(4); }
+            if (key === 'F5') { event.preventDefault(); that.sendToClipboard(5); }
+            if (key === 'F6') { event.preventDefault(); that.sendToClipboard(6); }
+            if (key === 'F7') { event.preventDefault(); that.sendToClipboard(7); }
+            if (key === 'F8') { event.preventDefault(); that.sendToClipboard(8); }
+            if (key === 'F9') { event.preventDefault(); that.sendToClipboard(9); }
+            if (key === 'F10') { event.preventDefault(); that.sendToClipboard(10); }
+            if (key === 'F11') { event.preventDefault(); that.sendToClipboard(11); }
+            if (key === 'F12') { event.preventDefault(); that.sendToClipboard(12); }
+        });
+      })
     }
   })
 </script>
