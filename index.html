@@ -70,7 +70,7 @@
 <body>
   <h1>Multi-clipboard</h1>
   <p>
-    Multi-clipboard alows you to have on hand many snippets of text to be copied and pasted with a single click or key press.
+    Multi-clipboard alows you to have on hand many snippets of text to be copied and pasted with a single click or key press. Press F1 to F12 to copy. All data will remain on local storage.
   </p>
   <div id="app" style="padding: 50px;">
     <ul class="grid">
@@ -89,6 +89,8 @@
           <input
             placeholder="Reminder"
             style="margin: 0;border: 0;color: #666;"
+            v-model="reminders[index]"
+            @change="saveReminderToStorage(index + 1)"
             />
           <div style="min-height: 19px;">
             <div v-if="fsContent[index]">
@@ -105,6 +107,20 @@
     el: '#app',
     data: {
       fsContent: [
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        ''
+      ],
+      reminders: [
         '',
         '',
         '',
@@ -151,12 +167,15 @@
           false
         ];
         this.copied[fNumber - 1] = true;
-        this.$refs['inputF' + fNumber][0].select();
+        this.$refs['inputF' + (fNumber + 1)][0].select();
         document.execCommand('copy');
       },
       saveToStorage: function(fNumber) {
         this.sendToClipboard(fNumber - 1);
         window.localStorage.setItem('f' + fNumber, this.fsContent[fNumber - 1]);
+      },
+      saveReminderToStorage: function(fNumber) {
+        window.localStorage.setItem('reminder' + fNumber, this.reminders[fNumber - 1]);
       }
     },
     mounted: function() {
@@ -164,6 +183,7 @@
         for (r = 1; r <= 12; r++) {
           if (window.localStorage.getItem('f' + r))
             this.$set(this.fsContent, r - 1, window.localStorage.getItem('f' + r)); // updating array doesn't set reactivity
+            this.$set(this.reminders, r - 1, window.localStorage.getItem('reminder' + r)); // updating array doesn't set reactivity
         };
         var that = this;
         document.addEventListener('keydown', function (event) {
