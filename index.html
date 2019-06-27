@@ -55,6 +55,7 @@
       border-radius: 5px;
       border: 1px #e3e5e6 solid;
       cursor: pointer;
+      margin-left: 7px;
     }
     label {
       box-sizing: border-box;
@@ -87,11 +88,13 @@
             />
           <input
             placeholder="Reminder"
-            style="margin: 0;border: 0;"
+            style="margin: 0;border: 0;color: #666;"
             />
-          <div>
-            F{{ (index + 1) }} <button type="button" @click="sendToClipboard(index + 1)">COPY</button>
-            <span v-if="copied[index]" style="position: absolute; right: 15px;margin-top: 2px;">COPIED</span>
+          <div style="min-height: 19px;">
+            <div v-if="fsContent[index]">
+              F{{ (index + 1) }} <button type="button" @click="sendToClipboard(index + 1)">COPY</button>
+              <span v-if="copied[index]" style="position: absolute; right: 15px;margin-top: 2px;">COPIED</span>
+            </div>
           </div>
         </label>
       </li>
