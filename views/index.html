@@ -2,15 +2,100 @@
 <head>
   <title>Multiclipboard</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
+    }
+
+    *:focus {
+      outline: 0;
+    }
+
+    .grid {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+    .grid > li{
+      box-sizing: border-box;
+      clear: none;
+      display: block;
+      float: left;
+      padding: 10px;
+    }
+    @media (min-width: 700px) {
+      .grid > li{
+        width: 50%;
+      }
+    }
+    @media (min-width: 1024px) {
+      .grid > li{
+        width: 25%;
+      }
+    }
+    h1 {
+      border-bottom: 1px #e3e5e6 solid;
+      margin: 0;
+      padding: 20px 0;
+    }
+    input {
+      border-radius: 5px;
+      border: 1px #e3e5e6 solid;
+      margin: 10px 0;
+      padding: 6px 10px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    button {
+      background: #f1f1f1;
+      border-radius: 5px;
+      border: 1px #e3e5e6 solid;
+      cursor: pointer;
+    }
+    label {
+      box-sizing: border-box;
+      display: block;
+      border-radius: 5px;
+      border: 1px #e3e5e6 solid;
+      padding: 10px;
+      position: relative;
+    }
+  </style>
 </head>
 <body>
+  <h1>Multi-clipboard</h1>
+  <p>
+    Multi-clipboard alows you to have on hand many snippets of text to be copied and pasted with a single click or key press.
+  </p>
   <div id="app" style="padding: 50px;">
-    <div v-for="(x, index) in howMany" style="margin-bottom: 15px;">
-      {{ (index + 1) }}
-      <input type="text" style="width: 400px;" @change="saveToStorage(index + 1)" v-model="fsContent[index]" :ref="'inputF' + (index + 1)" @keydown="copied = [false,false,false,false,false,false,false,false,false,false,false,false];"/>
-      <button @click="sendToClipboard(index + 1)">Copy</button>
-      <span v-if="copied[index]">Copied</span>
-    </div>
+    <ul class="grid">
+      <li v-for="(x, index) in howMany" style="margin-bottom: 15px;">
+        <label :for="'inp' + index">
+          <input
+            :id="'inp' + index"
+            :tabindex="index + 1"
+            type="text"
+            @change="saveToStorage(index + 1)"
+            v-model="fsContent[index]"
+            :ref="'inputF' + (index + 1)"
+            @keydown="copied = [false,false,false,false,false,false,false,false,false,false,false,false];"
+            placeholder="Paste here"
+            />
+          <input
+            placeholder="Reminder"
+            style="margin: 0;border: 0;"
+            />
+          <div>
+            F{{ (index + 1) }} <button type="button" @click="sendToClipboard(index + 1)">COPY</button>
+            <span v-if="copied[index]" style="position: absolute; right: 15px;margin-top: 2px;">COPIED</span>
+          </div>
+        </label>
+      </li>
+    </ul>
   </div>
 <script>
   new Vue({
@@ -67,6 +152,7 @@
         document.execCommand('copy');
       },
       saveToStorage: function(fNumber) {
+        this.sendToClipboard(fNumber - 1);
         window.localStorage.setItem('f' + fNumber, this.fsContent[fNumber - 1]);
       }
     },
@@ -78,19 +164,19 @@
         };
         var that = this;
         document.addEventListener('keydown', function (event) {
-            var key = event.key || event.keyCode;
-            if (key === 'F1') { event.preventDefault(); that.sendToClipboard(1); }
-            if (key === 'F2') { event.preventDefault(); that.sendToClipboard(2); }
-            if (key === 'F3') { event.preventDefault(); that.sendToClipboard(3); }
-            if (key === 'F4') { event.preventDefault(); that.sendToClipboard(4); }
-            if (key === 'F5') { event.preventDefault(); that.sendToClipboard(5); }
-            if (key === 'F6') { event.preventDefault(); that.sendToClipboard(6); }
-            if (key === 'F7') { event.preventDefault(); that.sendToClipboard(7); }
-            if (key === 'F8') { event.preventDefault(); that.sendToClipboard(8); }
-            if (key === 'F9') { event.preventDefault(); that.sendToClipboard(9); }
-            if (key === 'F10') { event.preventDefault(); that.sendToClipboard(10); }
-            if (key === 'F11') { event.preventDefault(); that.sendToClipboard(11); }
-            if (key === 'F12') { event.preventDefault(); that.sendToClipboard(12); }
+          var key = event.key || event.keyCode;
+          if (key === 'F1') { event.preventDefault(); that.sendToClipboard(1); }
+          if (key === 'F2') { event.preventDefault(); that.sendToClipboard(2); }
+          if (key === 'F3') { event.preventDefault(); that.sendToClipboard(3); }
+          if (key === 'F4') { event.preventDefault(); that.sendToClipboard(4); }
+          if (key === 'F5') { event.preventDefault(); that.sendToClipboard(5); }
+          if (key === 'F6') { event.preventDefault(); that.sendToClipboard(6); }
+          if (key === 'F7') { event.preventDefault(); that.sendToClipboard(7); }
+          if (key === 'F8') { event.preventDefault(); that.sendToClipboard(8); }
+          if (key === 'F9') { event.preventDefault(); that.sendToClipboard(9); }
+          if (key === 'F10') { event.preventDefault(); that.sendToClipboard(10); }
+          if (key === 'F11') { event.preventDefault(); that.sendToClipboard(11); }
+          if (key === 'F12') { event.preventDefault(); that.sendToClipboard(12); }
         });
       })
     }
