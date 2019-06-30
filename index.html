@@ -84,7 +84,7 @@
             @change="saveToStorage(index + 1)"
             v-model="fsContent[index]"
             :ref="'inputF' + (index + 1)"
-            @keydown="copied = [false,false,false,false,false,false,false,false,false,false,false,false];"
+            @keydown="copied[index + 1] = false;"
             placeholder="Paste here"
             />
           <div style="min-height: 27px;">
@@ -110,67 +110,18 @@
   new Vue({
     el: '#app',
     data: {
-      fsContent: [
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        ''
-      ],
-      reminders: [
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        ''
-      ],
-      copied: [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
+      fsContent: [],
+      reminders: [],
+      copied: [],
       howMany: 12
     },
     methods: {
       sendToClipboard: function(fNumber) {
-        this.copied = [
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false
-        ];
-        this.copied[fNumber] = true;
+        for (let r = this.howMany - 1; r >= 0; r--) {
+          if (r !== fNumber)
+            this.$set(this.copied, r, false);
+        }
+        this.$set(this.copied, fNumber, true);
         this.$refs['inputF' + (fNumber + 1)][0].select();
         document.execCommand('copy');
       },
