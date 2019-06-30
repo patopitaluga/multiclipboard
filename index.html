@@ -8,7 +8,7 @@
     body {
       text-align: center;
       font-family: 'Roboto', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
     }
 
     *:focus {
@@ -87,15 +87,18 @@
             @keydown="copied = [false,false,false,false,false,false,false,false,false,false,false,false];"
             placeholder="Paste here"
             />
-          <input
-            placeholder="Reminder"
-            style="margin: 0;border: 0;color: #666;"
-            v-model="reminders[index]"
-            @change="saveReminderToStorage(index + 1)"
-            />
+          <div style="min-height: 27px;">
+            <input
+              placeholder="Reminder (optional)"
+              style="margin: 0;border: 0;color: #666;"
+              v-if="fsContent[index]"
+              v-model="reminders[index]"
+              @change="saveReminderToStorage(index + 1)"
+              />
+          </div>
           <div style="min-height: 19px;">
             <div v-if="fsContent[index]">
-              F{{ (index + 1) }} <button type="button" @click="sendToClipboard(index + 1)">COPY</button>
+              F{{ (index + 1) }} <button type="button" @click="sendToClipboard(index)">COPY</button>
               <span v-if="copied[index]" style="position: absolute; right: 15px;margin-top: 2px;">COPIED</span>
             </div>
           </div>
@@ -167,7 +170,7 @@
           false,
           false
         ];
-        this.copied[fNumber - 1] = true;
+        this.copied[fNumber] = true;
         this.$refs['inputF' + (fNumber + 1)][0].select();
         document.execCommand('copy');
       },
@@ -189,18 +192,18 @@
         var that = this;
         document.addEventListener('keydown', function (event) {
           var key = event.key || event.keyCode;
-          if (key === 'F1') { event.preventDefault(); that.sendToClipboard(1); }
-          if (key === 'F2') { event.preventDefault(); that.sendToClipboard(2); }
-          if (key === 'F3') { event.preventDefault(); that.sendToClipboard(3); }
-          if (key === 'F4') { event.preventDefault(); that.sendToClipboard(4); }
-          if (key === 'F5') { event.preventDefault(); that.sendToClipboard(5); }
-          if (key === 'F6') { event.preventDefault(); that.sendToClipboard(6); }
-          if (key === 'F7') { event.preventDefault(); that.sendToClipboard(7); }
-          if (key === 'F8') { event.preventDefault(); that.sendToClipboard(8); }
-          if (key === 'F9') { event.preventDefault(); that.sendToClipboard(9); }
-          if (key === 'F10') { event.preventDefault(); that.sendToClipboard(10); }
-          if (key === 'F11') { event.preventDefault(); that.sendToClipboard(11); }
-          if (key === 'F12') { event.preventDefault(); that.sendToClipboard(12); }
+          if (key === 'F1') { event.preventDefault(); that.sendToClipboard(0); }
+          if (key === 'F2') { event.preventDefault(); that.sendToClipboard(1); }
+          if (key === 'F3') { event.preventDefault(); that.sendToClipboard(2); }
+          if (key === 'F4') { event.preventDefault(); that.sendToClipboard(3); }
+          if (key === 'F5') { event.preventDefault(); that.sendToClipboard(4); }
+          if (key === 'F6') { event.preventDefault(); that.sendToClipboard(5); }
+          if (key === 'F7') { event.preventDefault(); that.sendToClipboard(6); }
+          if (key === 'F8') { event.preventDefault(); that.sendToClipboard(7); }
+          if (key === 'F9') { event.preventDefault(); that.sendToClipboard(8); }
+          if (key === 'F10') { event.preventDefault(); that.sendToClipboard(9); }
+          if (key === 'F11') { event.preventDefault(); that.sendToClipboard(10); }
+          if (key === 'F12') { event.preventDefault(); that.sendToClipboard(11); }
         });
       })
     }
