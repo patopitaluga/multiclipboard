@@ -8,7 +8,9 @@
     body {
       text-align: center;
       font-family: 'Roboto', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
+      margin: 0;
+      border: 1px #aaa solid;
     }
 
     *:focus {
@@ -23,57 +25,119 @@
     }
     .grid > li{
       box-sizing: border-box;
-      clear: none;
       display: block;
-      float: left;
-      padding: 10px;
+      padding: 5px;
     }
+
     @media (min-width: 700px) {
+
       .grid > li{
+        clear: none;
+        float: left;
         width: 50%;
       }
     }
+
     @media (min-width: 1024px) {
+
       .grid > li{
         width: 25%;
       }
     }
+
     h1 {
       border-bottom: 1px #e3e5e6 solid;
       margin: 0;
-      padding: 20px 0;
+      padding: 16px 0;
     }
     input {
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
       border-radius: 5px;
       border: 1px #e3e5e6 solid;
-      margin: 10px 0;
+      margin: 0 0 6px;
       padding: 6px 10px;
       box-sizing: border-box;
       width: 100%;
     }
+    ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      color: #999;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: #999;
+      opacity: 1;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: #999;
+      opacity: 1;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: #999;
+    }
+    ::-ms-input-placeholder { /* Microsoft Edge */
+      color: #999;
+    }
+    ::placeholder { /* Most modern browsers support this now. */
+      color: #999;
+    }
     button {
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
       background: #f1f1f1;
-      border-radius: 5px;
       border: 1px #e3e5e6 solid;
+      border-radius: 5px;
       cursor: pointer;
-      margin-left: 7px;
+      margin: 8px 0 2px;
+      padding: 4px 7px;
     }
     label {
       box-sizing: border-box;
       display: block;
       border-radius: 5px;
       border: 1px #e3e5e6 solid;
-      padding: 10px;
+      padding: 9px;
       position: relative;
+    }
+
+    #app {
+      padding: 0 50px;
+    }
+
+    .drag-space {
+      cursor: move; /* fallback if grab cursor is unsupported */
+      cursor: grab;
+      cursor: -moz-grab;
+      cursor: -webkit-grab;
+    }
+
+     /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+    .drag-space:active {
+      cursor: grabbing;
+      cursor: -moz-grabbing;
+      cursor: -webkit-grabbing;
+    }
+
+    #drag-icon {
+      background: red;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+    }
+    #close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Multi-clipboard</h1>
+  <div class="drag-space" style="-webkit-app-region: drag;padding-top: 8px;" title="drag">
+    <h1>Multi-clipboard</h1>
+  </div>
   <p>
-    Multi-clipboard alows you to have on hand many snippets of text to be copied and pasted with a single click or key press. Press F1 to F12 to copy. All data will remain on local storage.
+    Keep many text snippets ready to be copy/pasted in the browser with a single key or click
   </p>
-  <div id="app" style="padding: 50px;">
+  <div id="app">
     <ul class="grid">
       <li v-for="(x, index) in howMany" style="margin-bottom: 15px;">
         <label :for="'inp' + index">
@@ -90,21 +154,25 @@
           <div style="min-height: 27px;">
             <input
               placeholder="Reminder (optional)"
-              style="margin: 0;border: 0;color: #666;"
+              style="margin: 0;border: 0;color: #777;"
               v-if="fsContent[index]"
               v-model="reminders[index]"
               @change="saveReminderToStorage(index + 1)"
               />
           </div>
-          <div style="min-height: 19px;">
+          <div style="min-height: 35px;">
             <div v-if="fsContent[index]">
-              F{{ (index + 1) }} <button type="button" @click="sendToClipboard(index)">COPY</button>
-              <span v-if="copied[index]" style="position: absolute; right: 15px;margin-top: 2px;">COPIED</span>
+              <button type="button" @click="sendToClipboard(index)">COPY (F{{ (index + 1) }})</button>
+              <span v-if="copied[index]" style="position: absolute; right: 15px;bottom: 16px;">COPIED</span>
             </div>
           </div>
         </label>
       </li>
     </ul>
+    <a href="https://github.com/patopitaluga/multiclipboard" target="_blank">https://github.com/patopitaluga/multiclipboard</a> - By <a href="mailto:patricio.pitaluga@gmail.com">patricio.pitaluga@gmail.com</a>
+  </div>
+  <div id="close-btn">
+    X
   </div>
 <script>
   new Vue({
@@ -126,7 +194,6 @@
         document.execCommand('copy');
       },
       saveToStorage: function(fNumber) {
-        this.sendToClipboard(fNumber - 1);
         window.localStorage.setItem('f' + fNumber, this.fsContent[fNumber - 1]);
       },
       saveReminderToStorage: function(fNumber) {
@@ -156,6 +223,22 @@
           if (key === 'F11') { event.preventDefault(); that.sendToClipboard(10); }
           if (key === 'F12') { event.preventDefault(); that.sendToClipboard(11); }
         });
+
+        /* var dragIcon = document.querySelector('#drag-icon');
+        document.addEventListener('mousemove', function(e) {
+          dragIcon.style.left = e.pageX + 'px';
+          dragIcon.style.top = e.pageY + 'px';
+        }, false);*/
+
+        if (navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
+          var remote = require('electron').remote;
+          document.getElementById('close-btn').style.display = 'block';
+          document.getElementById('close-btn').addEventListener('click', function (e) {
+            console.log(1);
+            //var window = remote.getCurrentWindow();
+            //window.close();
+          });
+        }
       })
     }
   })

@@ -1,0 +1,24 @@
+{
+  "name": "multiclipboard",
+  "version": "1.0.0",
+  "description": "Multiclipboard",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^5.0.6"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patopitaluga/multiclipboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patopitaluga/multiclipboard/issues"
+  },
+  "homepage": "https://github.com/patopitaluga/multiclipboard#readme"
+}
