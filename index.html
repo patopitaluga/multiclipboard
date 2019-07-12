@@ -6,15 +6,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <style>
     body {
-      text-align: center;
+      border: 1px #aaa solid;
+      box-sizing: border-box;
       font-family: 'Roboto', sans-serif;
       font-size: 13px;
+      height: 100vh;
       margin: 0;
-      border: 1px #aaa solid;
-      padding-bottom: 20px;
-    }
-    ::-webkit-scrollbar {
-      display: none;
+      overflow: hidden;
+      text-align: center;
     }
 
     *:focus {
@@ -104,7 +103,6 @@
     }
 
     #app {
-      padding: 0 50px;
     }
 
     .drag-space {
@@ -136,8 +134,8 @@
       justify-content: center;
       padding: 0;
       position: absolute;
-      right: 15px;
-      top: 0;
+      right: 40px;
+      top: 3px;
       width: 15px;
     }
     #minimize-btn::before {
@@ -156,8 +154,8 @@
       justify-content: center;
       padding: 0;
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 25px;
+      top: 3px;
       width: 15px;
     }
     #close-btn::before {
@@ -180,53 +178,65 @@
       transform: rotate(-45deg);
       width: 10px;
     }
+
+    .scroll {
+      box-sizing: border-box;
+      height: 100vh;
+      overflow: auto;
+      padding: 0 50px 20px;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-  <div class="drag-space" style="-webkit-app-region: drag;padding-top: 8px;" title="drag">
-    <h1>Multi-clipboard</h1>
-  </div>
-  <p>
-    Keep many text snippets ready to be copy/pasted with a single key or click
-  </p>
   <div id="app">
-    <ul class="grid">
-      <li v-for="(x, index) in howMany" style="margin-bottom: 15px;">
-        <label :for="'inp' + index">
-          <input
-            :id="'inp' + index"
-            :tabindex="index + 1"
-            type="text"
-            @change="saveToStorage(index + 1)"
-            v-model="fsContent[index]"
-            :ref="'inputF' + (index + 1)"
-            @keydown="copied[index + 1] = false;"
-            placeholder="Paste here"
-            />
-          <div style="min-height: 27px;">
+    <div class="scroll">
+      <div class="drag-space" style="-webkit-app-region: drag;padding-top: 8px;" title="drag">
+        <h1>Multi-clipboard</h1>
+      </div>
+      <p>
+        Keep many text snippets ready to be copy/pasted with a single key or click
+      </p>
+      <ul class="grid">
+        <li v-for="(x, index) in howMany" style="margin-bottom: 15px;">
+          <label :for="'inp' + index">
             <input
-              placeholder="Reminder (optional)"
-              style="margin: 0;border: 0;color: #777;"
-              v-if="fsContent[index]"
-              v-model="reminders[index]"
-              @change="saveReminderToStorage(index + 1)"
+              :id="'inp' + index"
+              :tabindex="index + 1"
+              type="text"
+              @change="saveToStorage(index + 1)"
+              v-model="fsContent[index]"
+              :ref="'inputF' + (index + 1)"
+              @keydown="copied[index + 1] = false;"
+              placeholder="Paste here"
               />
-          </div>
-          <div style="min-height: 35px;">
-            <div v-if="fsContent[index]">
-              <button type="button" @click="sendToClipboard(index)">COPY (F{{ (index + 1) }})</button>
-              <span v-if="copied[index]" style="position: absolute; right: 15px;bottom: 16px;">COPIED</span>
+            <div style="min-height: 27px;">
+              <input
+                placeholder="Reminder (optional)"
+                style="margin: 0;border: 0;color: #777;"
+                v-if="fsContent[index]"
+                v-model="reminders[index]"
+                @change="saveReminderToStorage(index + 1)"
+                />
             </div>
-          </div>
-        </label>
-      </li>
-    </ul>
-    <a href="https://github.com/patopitaluga/multiclipboard" target="_blank">https://github.com/patopitaluga/multiclipboard</a> - By <a href="mailto:patricio.pitaluga@gmail.com">patricio.pitaluga@gmail.com</a>
+            <div style="min-height: 35px;">
+              <div v-if="fsContent[index]">
+                <button type="button" @click="sendToClipboard(index)">COPY (F{{ (index + 1) }})</button>
+                <span v-if="copied[index]" style="position: absolute; right: 15px;bottom: 16px;">COPIED</span>
+              </div>
+            </div>
+          </label>
+        </li>
+      </ul>
+      <a href="https://github.com/patopitaluga/multiclipboard" target="_blank">https://github.com/patopitaluga/multiclipboard</a> - By <a href="mailto:patricio.pitaluga@gmail.com">patricio.pitaluga@gmail.com</a>
+      <div id="minimize-btn"></div>
+      <div id="close-btn"></div>
+    </div>
   </div>
-  <div id="minimize-btn"></div>
-  <div id="close-btn"></div>
 <script>
-  var remote = require('electron').remote;
+  var remote;
+  if (navigator.userAgent.toLowerCase().indexOf('electron') > -1)
+    remote = require('electron').remote;
 
   new Vue({
     el: '#app',

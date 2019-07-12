@@ -8,13 +8,20 @@ const app = remote.app;
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 function createWindow () {
-  mainWindow = new BrowserWindow({ width: 900, height: 600, frame: false, alwaysOnTop: true, enableRemoteModule: true,
+  mainWindow = new BrowserWindow({
+    width: 900,
+    height: 600,
+    frame: false,
+    alwaysOnTop: true,
+    enableRemoteModule: true,
+    minHeight: 300,
+    minWidth: 300,
     webPreferences: { nodeIntegration: true } // this enables require in the browser
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  // mainWindow.webContents.openDevTools() // DevTools for debugging
+  mainWindow.webContents.openDevTools() // DevTools for debugging
 
   mainWindow.on('closed', function() { // Emitted when the window is closed.
     // Dereference the window object, usually you would store windows
