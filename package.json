@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Multiclipboard",
   "main": "app.js",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "electron": "^5.0.6"
   },
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "webpack": "node node_modules/webpack-cli/bin/cli.js -p"
   },
   "repository": {
     "type": "git",

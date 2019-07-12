@@ -1,26 +1,26 @@
-const electron = require('electron')
-const app = electron.app
+const remote = require('electron');
 
-const BrowserWindow = electron.BrowserWindow
+const BrowserWindow = remote.BrowserWindow;
+
+const app = remote.app;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 900, height: 600, frame: false, alwaysOnTop: true })
+  mainWindow = new BrowserWindow({ width: 900, height: 600, frame: false, alwaysOnTop: true, enableRemoteModule: true,
+    webPreferences: { nodeIntegration: true } // this enables require in the browser
+  });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools() // Debug
+  // mainWindow.webContents.openDevTools() // DevTools for debugging
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', function() { // Emitted when the window is closed.
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    mainWindow = null;
   })
 }
 
@@ -34,7 +34,7 @@ app.on('window-all-closed', function() {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
 })
 
@@ -42,7 +42,7 @@ app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
 })
 

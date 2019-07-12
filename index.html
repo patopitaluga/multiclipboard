@@ -11,6 +11,10 @@
       font-size: 13px;
       margin: 0;
       border: 1px #aaa solid;
+      padding-bottom: 20px;
+    }
+    ::-webkit-scrollbar {
+      display: none;
     }
 
     *:focus {
@@ -123,10 +127,58 @@
       height: 10px;
       position: absolute;
     }
-    #close-btn {
+    #minimize-btn {
+      -webkit-app-region: no-drag;
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: 15px;
+      justify-content: center;
+      padding: 0;
       position: absolute;
-      top: 10px;
-      right: 10px;
+      right: 15px;
+      top: 0;
+      width: 15px;
+    }
+    #minimize-btn::before {
+      background: #000;
+      content: '';
+      display: block;
+      height: 2px;
+      width: 10px;
+    }
+    #close-btn {
+      -webkit-app-region: no-drag;
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: 15px;
+      justify-content: center;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 15px;
+    }
+    #close-btn::before {
+      background: #000;
+      content: '';
+      display: block;
+      height: 2px;
+      position: absolute;
+      transform-origin: center center;
+      transform: rotate(45deg);
+      width: 10px;
+    }
+    #close-btn::after {
+      background: #000;
+      content: '';
+      display: block;
+      height: 2px;
+      position: absolute;
+      transform-origin: center center;
+      transform: rotate(-45deg);
+      width: 10px;
     }
   </style>
 </head>
@@ -135,7 +187,7 @@
     <h1>Multi-clipboard</h1>
   </div>
   <p>
-    Keep many text snippets ready to be copy/pasted in the browser with a single key or click
+    Keep many text snippets ready to be copy/pasted with a single key or click
   </p>
   <div id="app">
     <ul class="grid">
@@ -171,10 +223,11 @@
     </ul>
     <a href="https://github.com/patopitaluga/multiclipboard" target="_blank">https://github.com/patopitaluga/multiclipboard</a> - By <a href="mailto:patricio.pitaluga@gmail.com">patricio.pitaluga@gmail.com</a>
   </div>
-  <div id="close-btn">
-    X
-  </div>
+  <div id="minimize-btn"></div>
+  <div id="close-btn"></div>
 <script>
+  var remote = require('electron').remote;
+
   new Vue({
     el: '#app',
     data: {
@@ -231,12 +284,13 @@
         }, false);*/
 
         if (navigator.userAgent.toLowerCase().indexOf('electron') > -1) {
-          var remote = require('electron').remote;
-          document.getElementById('close-btn').style.display = 'block';
+          document.getElementById('close-btn').style.display = 'flex';
           document.getElementById('close-btn').addEventListener('click', function (e) {
-            console.log(1);
-            //var window = remote.getCurrentWindow();
-            //window.close();
+            window.close();
+          });
+          document.getElementById('minimize-btn').style.display = 'flex';
+          document.getElementById('minimize-btn').addEventListener('click', function (e) {
+            remote.BrowserWindow.getFocusedWindow().minimize();
           });
         }
       })
