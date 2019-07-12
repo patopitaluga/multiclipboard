@@ -16,3 +16,9 @@ npm run start
 ## Web version
 
 Web version https://patopitaluga.github.io/multiclipboard/
+
+## Build standalone executable
+Windows
+```
+npx electron-packager ./ multiclipboard --platform=win32
+```
