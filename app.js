@@ -21,7 +21,7 @@ function createWindow () {
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  mainWindow.webContents.openDevTools() // DevTools for debugging
+  // mainWindow.webContents.openDevTools() // DevTools for debugging
 
   mainWindow.on('closed', function() { // Emitted when the window is closed.
     // Dereference the window object, usually you would store windows
